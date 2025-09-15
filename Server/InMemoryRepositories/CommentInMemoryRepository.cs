@@ -7,10 +7,37 @@ public class CommentInMemoryRepository : ICommentRepository
 {
     private List<Comment> comments = new List<Comment>();
 
+    public CommentInMemoryRepository()
+    {
+        SeedData();
+    }
+
+    private void SeedData()
+    {
+        comments.AddRange(new[]
+        {
+            new Comment
+            {
+                Id = 1, Body = "Great post! Thanks for sharing.", PostId = 1,
+                UserId = 2
+            },
+            new Comment
+            {
+                Id = 2, Body = "I agree with your points about C#.", PostId = 2,
+                UserId = 3
+            },
+            new Comment
+            {
+                Id = 3, Body = "Very informative discussion!", PostId = 3,
+                UserId = 1
+            }
+        });
+    }
+
     public Task<Comment> AddAsync(Comment comment)
     {
-        comment.CommentId =
-            comments.Any() ? comments.Max(c => c.CommentId) + 1 : 1;
+        comment.Id =
+            comments.Any() ? comments.Max(c => c.Id) + 1 : 1;
         comments.Add(comment);
         return Task.FromResult(comment);
     }
@@ -18,11 +45,11 @@ public class CommentInMemoryRepository : ICommentRepository
     public Task UpdateAsync(Comment comment)
     {
         Comment? existingComment =
-            comments.SingleOrDefault(c => c.CommentId == comment.CommentId);
+            comments.SingleOrDefault(c => c.Id == comment.Id);
         if (existingComment is null)
         {
             throw new InvalidOperationException(
-                $"Comment with ID '{comment.CommentId}' not found");
+                $"Comment with ID '{comment.Id}' not found");
         }
 
         comments.Remove(existingComment);
@@ -33,7 +60,7 @@ public class CommentInMemoryRepository : ICommentRepository
     public Task DeleteAsync(int id)
     {
         Comment? commentToRemove =
-            comments.SingleOrDefault(c => c.CommentId == id);
+            comments.SingleOrDefault(c => c.Id == id);
         if (commentToRemove is null)
         {
             throw new InvalidOperationException(
@@ -46,7 +73,7 @@ public class CommentInMemoryRepository : ICommentRepository
 
     public Task<Comment> GetSingleAsync(int id)
     {
-        Comment? comment = comments.SingleOrDefault(c => c.CommentId == id);
+        Comment? comment = comments.SingleOrDefault(c => c.Id == id);
         if (comment is null)
         {
             throw new InvalidOperationException(
@@ -56,7 +83,7 @@ public class CommentInMemoryRepository : ICommentRepository
         return Task.FromResult(comment);
     }
 
-    public IQueryable<Comment> GetMany()
+    public IQueryable<Comment> GetManyAsync()
     {
         return comments.AsQueryable();
     }
