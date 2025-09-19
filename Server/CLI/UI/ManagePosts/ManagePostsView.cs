@@ -111,33 +111,7 @@ public class ManagePostsView
             return;
         }
 
-        try
-        {
-            var post = await postRepository.GetSingleAsync(id);
-            Console.WriteLine($"Current Title: {post.Title}");
-            Console.WriteLine($"Current Body: {post.Body}");
-
-            Console.Write("New Title (press Enter to keep current): ");
-            var newTitle = Console.ReadLine()?.Trim();
-            if (!string.IsNullOrEmpty(newTitle))
-            {
-                post.Title = newTitle;
-            }
-
-            Console.Write("New Body (press Enter to keep current): ");
-            var newBody = Console.ReadLine()?.Trim();
-            if (!string.IsNullOrEmpty(newBody))
-            {
-                post.Body = newBody;
-            }
-
-            await postRepository.UpdateAsync(post);
-            Console.WriteLine("Post updated successfully.");
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        // to be implemented
     }
 
     private async Task DeletePostAsync()
@@ -152,27 +126,7 @@ public class ManagePostsView
             return;
         }
 
-        try
-        {
-            var post = await postRepository.GetSingleAsync(id);
-            Console.WriteLine(
-                $"Are you sure you want to delete post '{post.Title}'? (y/n): ");
-            var confirmation = Console.ReadLine()?.ToLower();
-
-            if (confirmation == "y" || confirmation == "yes")
-            {
-                await postRepository.DeleteAsync(id);
-                Console.WriteLine("Post deleted successfully.");
-            }
-            else
-            {
-                Console.WriteLine("Delete operation cancelled.");
-            }
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        // to be implemented
     }
 
     private async Task ListPostsByUserAsync()
@@ -187,33 +141,6 @@ public class ManagePostsView
             return;
         }
 
-        try
-        {
-            var user = await userRepository.GetSingleAsync(userId);
-            Console.WriteLine($"Posts by {user.Username}:");
-            Console.WriteLine();
-
-            var userPosts = postRepository.GetManyAsync()
-                .Where(p => p.UserId == userId).ToList();
-            if (!userPosts.Any())
-            {
-                Console.WriteLine("No posts found for this user.");
-                return;
-            }
-
-            Console.WriteLine($"{"ID",-5} {"Title",-40}");
-            Console.WriteLine(new string('-', 50));
-            foreach (var post in userPosts)
-            {
-                var titleDisplay = post.Title.Length > 37
-                    ? post.Title.Substring(0, 37) + "..."
-                    : post.Title;
-                Console.WriteLine($"{post.Id,-5} {titleDisplay,-40}");
-            }
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        // to be implemented
     }
 }

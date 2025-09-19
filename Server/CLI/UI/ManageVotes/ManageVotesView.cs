@@ -99,53 +99,7 @@ public class ManageVotesView
             return;
         }
 
-        Console.Write("Vote type (1 for upvote, 0 for downvote): ");
-        if (!int.TryParse(Console.ReadLine(), out int voteType) ||
-            (voteType != 0 && voteType != 1))
-        {
-            Console.WriteLine(
-                "Invalid vote type. Use 1 for upvote, 0 for downvote.");
-            return;
-        }
-
-        try
-        {
-            // Validate post and user exist
-            await postRepository.GetSingleAsync(postId);
-            await userRepository.GetSingleAsync(userId);
-
-            // Check if user has already voted on this post
-            var existingVote =
-                await postVoteRepository!.GetVoteByUserAndPostAsync(userId,
-                    postId);
-
-            if (existingVote != null)
-            {
-                // Update existing vote
-                existingVote.IsUpvote = voteType == 1;
-                await postVoteRepository.UpdateAsync(existingVote);
-                Console.WriteLine(
-                    $"Vote updated to {(voteType == 1 ? "upvote" : "downvote")}.");
-            }
-            else
-            {
-                // Create new vote
-                var vote = new PostVote
-                {
-                    PostId = postId,
-                    UserId = userId,
-                    IsUpvote = voteType == 1
-                };
-
-                await postVoteRepository.AddAsync(vote);
-                Console.WriteLine(
-                    $"Vote cast: {(voteType == 1 ? "upvote" : "downvote")}.");
-            }
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // to be implemented
     }
 
     private async Task VoteOnCommentAsync()
@@ -167,53 +121,7 @@ public class ManageVotesView
             return;
         }
 
-        Console.Write("Vote type (1 for upvote, 0 for downvote): ");
-        if (!int.TryParse(Console.ReadLine(), out int voteType) ||
-            (voteType != 0 && voteType != 1))
-        {
-            Console.WriteLine(
-                "Invalid vote type. Use 1 for upvote, 0 for downvote.");
-            return;
-        }
-
-        try
-        {
-            // Validate comment and user exist
-            await commentRepository.GetSingleAsync(commentId);
-            await userRepository.GetSingleAsync(userId);
-
-            // Check if user has already voted on this comment
-            var existingVote =
-                await commentVoteRepository!.GetVoteByUserAndCommentAsync(
-                    userId, commentId);
-
-            if (existingVote != null)
-            {
-                // Update existing vote
-                existingVote.IsUpvote = voteType == 1;
-                await commentVoteRepository.UpdateAsync(existingVote);
-                Console.WriteLine(
-                    $"Vote updated to {(voteType == 1 ? "upvote" : "downvote")}.");
-            }
-            else
-            {
-                // Create new vote
-                var vote = new CommentVote
-                {
-                    CommentId = commentId,
-                    UserId = userId,
-                    IsUpvote = voteType == 1
-                };
-
-                await commentVoteRepository.AddAsync(vote);
-                Console.WriteLine(
-                    $"Vote cast: {(voteType == 1 ? "upvote" : "downvote")}.");
-            }
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // to be implemented
     }
 
     private async Task ViewPostVotesAsync()
@@ -221,61 +129,7 @@ public class ManageVotesView
         Console.Clear();
         Console.WriteLine("=== Post Votes ===");
 
-        Console.Write("Enter Post ID (or press Enter to see all): ");
-        var input = Console.ReadLine()?.Trim();
-
-        try
-        {
-            if (string.IsNullOrEmpty(input))
-            {
-                // Show all votes
-                var allVotes = postVoteRepository!.GetManyAsync().ToList();
-                if (!allVotes.Any())
-                {
-                    Console.WriteLine("No votes found.");
-                    return;
-                }
-
-                Console.WriteLine(
-                    $"{"Vote ID",-8} {"Post ID",-8} {"User ID",-8} {"Vote Type",-12}");
-                Console.WriteLine(new string('-', 40));
-                foreach (var vote in allVotes)
-                {
-                    Console.WriteLine(
-                        $"{vote.Id,-8} {vote.PostId,-8} {vote.UserId,-8} {(vote.IsUpvote ? "Upvote" : "Downvote"),-12}");
-                }
-            }
-            else
-            {
-                if (!int.TryParse(input, out int postId))
-                {
-                    Console.WriteLine("Invalid Post ID format.");
-                    return;
-                }
-
-                var post = await postRepository.GetSingleAsync(postId);
-                var votes = postVoteRepository!.GetManyAsync()
-                    .Where(v => v.PostId == postId).ToList();
-
-                Console.WriteLine($"Votes for post '{post.Title}':");
-                if (!votes.Any())
-                {
-                    Console.WriteLine("No votes found for this post.");
-                    return;
-                }
-
-                var upvotes = votes.Count(v => v.IsUpvote);
-                var downvotes = votes.Count(v => !v.IsUpvote);
-
-                Console.WriteLine($"Upvotes: {upvotes}");
-                Console.WriteLine($"Downvotes: {downvotes}");
-                Console.WriteLine($"Total Score: {upvotes - downvotes}");
-            }
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // to be implemented
     }
 
     private async Task ViewCommentVotesAsync()
@@ -283,61 +137,6 @@ public class ManageVotesView
         Console.Clear();
         Console.WriteLine("=== Comment Votes ===");
 
-        Console.Write("Enter Comment ID (or press Enter to see all): ");
-        var input = Console.ReadLine()?.Trim();
-
-        try
-        {
-            if (string.IsNullOrEmpty(input))
-            {
-                // Show all votes
-                var allVotes = commentVoteRepository!.GetManyAsync().ToList();
-                if (!allVotes.Any())
-                {
-                    Console.WriteLine("No votes found.");
-                    return;
-                }
-
-                Console.WriteLine(
-                    $"{"Vote ID",-8} {"Comment ID",-11} {"User ID",-8} {"Vote Type",-12}");
-                Console.WriteLine(new string('-', 43));
-                foreach (var vote in allVotes)
-                {
-                    Console.WriteLine(
-                        $"{vote.Id,-8} {vote.CommentId,-11} {vote.UserId,-8} {(vote.IsUpvote ? "Upvote" : "Downvote"),-12}");
-                }
-            }
-            else
-            {
-                if (!int.TryParse(input, out int commentId))
-                {
-                    Console.WriteLine("Invalid Comment ID format.");
-                    return;
-                }
-
-                var comment = await commentRepository.GetSingleAsync(commentId);
-                var votes = commentVoteRepository!.GetManyAsync()
-                    .Where(v => v.CommentId == commentId).ToList();
-
-                Console.WriteLine(
-                    $"Votes for comment: '{comment.Body.Substring(0, Math.Min(50, comment.Body.Length))}...'");
-                if (!votes.Any())
-                {
-                    Console.WriteLine("No votes found for this comment.");
-                    return;
-                }
-
-                var upvotes = votes.Count(v => v.IsUpvote);
-                var downvotes = votes.Count(v => !v.IsUpvote);
-
-                Console.WriteLine($"Upvotes: {upvotes}");
-                Console.WriteLine($"Downvotes: {downvotes}");
-                Console.WriteLine($"Total Score: {upvotes - downvotes}");
-            }
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // to be implemented
     }
 }

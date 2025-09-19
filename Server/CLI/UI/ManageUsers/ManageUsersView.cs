@@ -63,63 +63,14 @@ public class ManageUsersView
 
     private async Task CreateUserAsync()
     {
-        Console.Clear();
-        Console.WriteLine("=== Create New User ===");
-
-        Console.Write("Username: ");
-        var username = Console.ReadLine()?.Trim();
-        if (string.IsNullOrEmpty(username))
-        {
-            Console.WriteLine("Username cannot be empty.");
-            return;
-        }
-
-        // Check if username already exists
-        var existingUsers = userRepository.GetManyAsync()
-            .Where(u => u.Username == username);
-        if (existingUsers.Any())
-        {
-            Console.WriteLine(
-                "Username already exists. Please choose a different username.");
-            return;
-        }
-
-        Console.Write("Password: ");
-        var password = Console.ReadLine()?.Trim();
-        if (string.IsNullOrEmpty(password))
-        {
-            Console.WriteLine("Password cannot be empty.");
-            return;
-        }
-
-        var user = new User
-        {
-            Username = username,
-            Password = password
-        };
-
-        var created = await userRepository.AddAsync(user);
-        Console.WriteLine($"User created successfully with ID: {created.Id}");
+        var createUserView = new CreateUserView(userRepository);
+        await createUserView.ShowAsync();
     }
 
     private async Task ListUsersAsync()
     {
-        Console.Clear();
-        Console.WriteLine("=== All Users ===");
-
-        var users = userRepository.GetManyAsync().ToList();
-        if (!users.Any())
-        {
-            Console.WriteLine("No users found.");
-            return;
-        }
-
-        Console.WriteLine($"{"ID",-5} {"Username",-20}");
-        Console.WriteLine(new string('-', 30));
-        foreach (var user in users)
-        {
-            Console.WriteLine($"{user.Id,-5} {user.Username,-20}");
-        }
+        var listUsersView = new ListUsersView(userRepository);
+        await listUsersView.ShowAsync();
     }
 
     private async Task ViewUserAsync()
@@ -134,16 +85,8 @@ public class ManageUsersView
             return;
         }
 
-        try
-        {
-            var user = await userRepository.GetSingleAsync(id);
-            Console.WriteLine($"ID: {user.Id}");
-            Console.WriteLine($"Username: {user.Username}");
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        var singleUserView = new SingleUserView(userRepository);
+        await singleUserView.ShowAsync(id);
     }
 
     private async Task UpdateUserAsync()
@@ -158,42 +101,7 @@ public class ManageUsersView
             return;
         }
 
-        try
-        {
-            var user = await userRepository.GetSingleAsync(id);
-            Console.WriteLine($"Current Username: {user.Username}");
-
-            Console.Write("New Username (press Enter to keep current): ");
-            var newUsername = Console.ReadLine()?.Trim();
-            if (!string.IsNullOrEmpty(newUsername))
-            {
-                // Check if new username already exists
-                var existingUsers = userRepository.GetManyAsync()
-                    .Where(u => u.Username == newUsername && u.Id != id);
-                if (existingUsers.Any())
-                {
-                    Console.WriteLine(
-                        "Username already exists. Please choose a different username.");
-                    return;
-                }
-
-                user.Username = newUsername;
-            }
-
-            Console.Write("New Password (press Enter to keep current): ");
-            var newPassword = Console.ReadLine()?.Trim();
-            if (!string.IsNullOrEmpty(newPassword))
-            {
-                user.Password = newPassword;
-            }
-
-            await userRepository.UpdateAsync(user);
-            Console.WriteLine("User updated successfully.");
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        // to be implemented
     }
 
     private async Task DeleteUserAsync()
@@ -208,26 +116,6 @@ public class ManageUsersView
             return;
         }
 
-        try
-        {
-            var user = await userRepository.GetSingleAsync(id);
-            Console.WriteLine(
-                $"Are you sure you want to delete user '{user.Username}'? (y/n): ");
-            var confirmation = Console.ReadLine()?.ToLower();
-
-            if (confirmation == "y" || confirmation == "yes")
-            {
-                await userRepository.DeleteAsync(id);
-                Console.WriteLine("User deleted successfully.");
-            }
-            else
-            {
-                Console.WriteLine("Delete operation cancelled.");
-            }
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        // to be implemented
     }
 }

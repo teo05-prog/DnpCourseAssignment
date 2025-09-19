@@ -117,25 +117,7 @@ public class ManageCommentsView
             return;
         }
 
-        try
-        {
-            var comment = await commentRepository.GetSingleAsync(id);
-            Console.WriteLine($"Current Body: {comment.Body}");
-
-            Console.Write("New Body (press Enter to keep current): ");
-            var newBody = Console.ReadLine()?.Trim();
-            if (!string.IsNullOrEmpty(newBody))
-            {
-                comment.Body = newBody;
-            }
-
-            await commentRepository.UpdateAsync(comment);
-            Console.WriteLine("Comment updated successfully.");
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        // to be implemented
     }
 
     private async Task DeleteCommentAsync()
@@ -150,28 +132,7 @@ public class ManageCommentsView
             return;
         }
 
-        try
-        {
-            var comment = await commentRepository.GetSingleAsync(id);
-            Console.WriteLine(
-                $"Are you sure you want to delete this comment? (y/n): ");
-            Console.WriteLine($"Comment: {comment.Body}");
-            var confirmation = Console.ReadLine()?.ToLower();
-
-            if (confirmation == "y" || confirmation == "yes")
-            {
-                await commentRepository.DeleteAsync(id);
-                Console.WriteLine("Comment deleted successfully.");
-            }
-            else
-            {
-                Console.WriteLine("Delete operation cancelled.");
-            }
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        // to be implemented
     }
 
     private async Task ListCommentsByUserAsync()
@@ -186,35 +147,7 @@ public class ManageCommentsView
             return;
         }
 
-        try
-        {
-            var user = await userRepository.GetSingleAsync(userId);
-            Console.WriteLine($"Comments by {user.Username}:");
-            Console.WriteLine();
-
-            var userComments = commentRepository.GetManyAsync()
-                .Where(c => c.UserId == userId).ToList();
-            if (!userComments.Any())
-            {
-                Console.WriteLine("No comments found for this user.");
-                return;
-            }
-
-            Console.WriteLine($"{"ID",-5} {"Body",-40} {"Post ID",-8}");
-            Console.WriteLine(new string('-', 57));
-            foreach (var comment in userComments)
-            {
-                var bodyDisplay = comment.Body.Length > 37
-                    ? comment.Body.Substring(0, 37) + "..."
-                    : comment.Body;
-                Console.WriteLine(
-                    $"{comment.Id,-5} {bodyDisplay,-40} {comment.PostId,-8}");
-            }
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        // to be implemented
     }
 
     private async Task ListCommentsByPostAsync()
@@ -229,41 +162,6 @@ public class ManageCommentsView
             return;
         }
 
-        try
-        {
-            var post = await postRepository.GetSingleAsync(postId);
-            Console.WriteLine($"Comments for '{post.Title}':");
-            Console.WriteLine();
-
-            var postComments = commentRepository.GetManyAsync()
-                .Where(c => c.PostId == postId).ToList();
-            if (!postComments.Any())
-            {
-                Console.WriteLine("No comments found for this post.");
-                return;
-            }
-
-            foreach (var comment in postComments)
-            {
-                try
-                {
-                    var author =
-                        await userRepository.GetSingleAsync(comment.UserId);
-                    Console.WriteLine(
-                        $"[{comment.Id}] {author.Username}: {comment.Body}");
-                }
-                catch
-                {
-                    Console.WriteLine(
-                        $"[{comment.Id}] Unknown User: {comment.Body}");
-                }
-
-                Console.WriteLine();
-            }
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        // to be implemented
     }
 }
