@@ -73,73 +73,14 @@ public class ManagePostsView
         Console.Clear();
         Console.WriteLine("=== Create New Post ===");
 
-        Console.Write("Post Title: ");
-        var title = Console.ReadLine()?.Trim();
-        if (string.IsNullOrEmpty(title))
-        {
-            Console.WriteLine("Title cannot be empty.");
-            return;
-        }
-
-        Console.Write("Post Body: ");
-        var body = Console.ReadLine()?.Trim();
-        if (string.IsNullOrEmpty(body))
-        {
-            Console.WriteLine("Body cannot be empty.");
-            return;
-        }
-
-        Console.Write("User ID (author): ");
-        if (!int.TryParse(Console.ReadLine(), out int userId))
-        {
-            Console.WriteLine("Invalid User ID format.");
-            return;
-        }
-
-        // Validate user exists
-        try
-        {
-            await userRepository.GetSingleAsync(userId);
-        }
-        catch (InvalidOperationException)
-        {
-            Console.WriteLine("User with specified ID does not exist.");
-            return;
-        }
-
-        var post = new Post
-        {
-            Title = title,
-            Body = body,
-            UserId = userId
-        };
-
-        var created = await postRepository.AddAsync(post);
-        Console.WriteLine($"Post created successfully with ID: {created.Id}");
+        var createPostView = new CreatePostView(postRepository);
+        await createPostView.ShowAsync(userRepository);
     }
 
     private async Task ListPostsAsync()
     {
-        Console.Clear();
-        Console.WriteLine("=== All Posts ===");
-
-        var posts = postRepository.GetManyAsync().ToList();
-        if (!posts.Any())
-        {
-            Console.WriteLine("No posts found.");
-            return;
-        }
-
-        Console.WriteLine($"{"ID",-5} {"Title",-30} {"Author ID",-10}");
-        Console.WriteLine(new string('-', 50));
-        foreach (var post in posts)
-        {
-            var titleDisplay = post.Title.Length > 27
-                ? post.Title.Substring(0, 27) + "..."
-                : post.Title;
-            Console.WriteLine(
-                $"{post.Id,-5} {titleDisplay,-30} {post.UserId,-10}");
-        }
+        var listPostsView = new ListPostsView(postRepository);
+        await listPostsView.ShowAsync(userRepository);
     }
 
     private async Task ViewPostAsync()
@@ -154,32 +95,8 @@ public class ManagePostsView
             return;
         }
 
-        try
-        {
-            var post = await postRepository.GetSingleAsync(id);
-            var author = await userRepository.GetSingleAsync(post.UserId);
-
-            Console.WriteLine($"Post ID: {post.Id}");
-            Console.WriteLine($"Title: {post.Title}");
-            Console.WriteLine($"Author: {author.Username} (ID: {author.Id})");
-            Console.WriteLine($"Body:\n{post.Body}");
-            Console.WriteLine();
-
-            // Show comments for this post
-            await ShowCommentsForPostAsync(id);
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-    }
-
-    private async Task ShowCommentsForPostAsync(int postId)
-    {
-        // This would require access to comment repository
-        Console.WriteLine("--- Comments ---");
-        Console.WriteLine(
-            "(Comment viewing requires comment repository access)");
+        var singlePostView = new SinglePostView(postRepository);
+        await singlePostView.ShowAsync(userRepository, id);
     }
 
     private async Task UpdatePostAsync()

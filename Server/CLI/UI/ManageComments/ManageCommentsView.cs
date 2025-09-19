@@ -79,75 +79,14 @@ public class ManageCommentsView
         Console.Clear();
         Console.WriteLine("=== Create New Comment ===");
 
-        Console.Write("Comment Body: ");
-        var body = Console.ReadLine()?.Trim();
-        if (string.IsNullOrEmpty(body))
-        {
-            Console.WriteLine("Body cannot be empty.");
-            return;
-        }
-
-        Console.Write("Post ID: ");
-        if (!int.TryParse(Console.ReadLine(), out int postId))
-        {
-            Console.WriteLine("Invalid Post ID format.");
-            return;
-        }
-
-        Console.Write("User ID (author): ");
-        if (!int.TryParse(Console.ReadLine(), out int userId))
-        {
-            Console.WriteLine("Invalid User ID format.");
-            return;
-        }
-
-        // Validate post and user exist
-        try
-        {
-            await postRepository.GetSingleAsync(postId);
-            await userRepository.GetSingleAsync(userId);
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine($"Validation failed: {ex.Message}");
-            return;
-        }
-
-        var comment = new Comment
-        {
-            Body = body,
-            PostId = postId,
-            UserId = userId
-        };
-
-        var created = await commentRepository.AddAsync(comment);
-        Console.WriteLine(
-            $"Comment created successfully with ID: {created.Id}");
+        var createCommentView = new CreateCommentView(commentRepository);
+        await createCommentView.ShowAsync(postRepository, userRepository);
     }
 
     private async Task ListCommentsAsync()
     {
-        Console.Clear();
-        Console.WriteLine("=== All Comments ===");
-
-        var comments = commentRepository.GetManyAsync().ToList();
-        if (!comments.Any())
-        {
-            Console.WriteLine("No comments found.");
-            return;
-        }
-
-        Console.WriteLine(
-            $"{"ID",-5} {"Body",-30} {"Post ID",-8} {"User ID",-8}");
-        Console.WriteLine(new string('-', 55));
-        foreach (var comment in comments)
-        {
-            var bodyDisplay = comment.Body.Length > 27
-                ? comment.Body.Substring(0, 27) + "..."
-                : comment.Body;
-            Console.WriteLine(
-                $"{comment.Id,-5} {bodyDisplay,-30} {comment.PostId,-8} {comment.UserId,-8}");
-        }
+        var listCommentView = new ListCommentView(commentRepository);
+        await listCommentView.ShowAsync();
     }
 
     private async Task ViewCommentAsync()
@@ -162,21 +101,8 @@ public class ManageCommentsView
             return;
         }
 
-        try
-        {
-            var comment = await commentRepository.GetSingleAsync(id);
-            var author = await userRepository.GetSingleAsync(comment.UserId);
-            var post = await postRepository.GetSingleAsync(comment.PostId);
-
-            Console.WriteLine($"Comment ID: {comment.Id}");
-            Console.WriteLine($"Author: {author.Username} (ID: {author.Id})");
-            Console.WriteLine($"Post: {post.Title} (ID: {post.Id})");
-            Console.WriteLine($"Body:\n{comment.Body}");
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        var singleCommentView = new SingleCommentView(commentRepository);
+        await singleCommentView.ShowAsync(postRepository, userRepository, id);
     }
 
     private async Task UpdateCommentAsync()
