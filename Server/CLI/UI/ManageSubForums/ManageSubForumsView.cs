@@ -57,25 +57,19 @@ public class ManageSubForumsView
 
     private async Task CreateSubForumAsync()
     {
-        Console.Clear();
-        Console.WriteLine("=== Create New SubForum ===");
-
-        // to be implemented
+        var createView = new CreateSubForumView(subForumRepository);
+        await createView.ShowAsync();
     }
 
     private async Task ListSubForumsAsync()
     {
-        Console.Clear();
-        Console.WriteLine("=== All SubForums ===");
-
-        // to be implemented
+        var listView = new ListSubForumsView(subForumRepository);
+        await listView.Show();
     }
 
     private async Task ViewSubForumAsync()
     {
-        Console.Clear();
-        Console.WriteLine("=== View SubForum ===");
-
-        // to be implemented
+        var singleView = new SingleSubForumView(subForumRepository);
+        await singleView.ShowAsync();
     }
 }

@@ -101,7 +101,8 @@ public class ManageUsersView
             return;
         }
 
-        // to be implemented
+        var updateUserView = new UpdateUserView(userRepository);
+        await updateUserView.ShowAsync(id);
     }
 
     private async Task DeleteUserAsync()
@@ -116,6 +117,7 @@ public class ManageUsersView
             return;
         }
 
-        // to be implemented
+        var deleteUserView = new DeleteUserView(userRepository);
+        await deleteUserView.ShowAsync(id);
     }
 }

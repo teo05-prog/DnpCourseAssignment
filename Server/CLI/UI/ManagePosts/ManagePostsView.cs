@@ -111,7 +111,8 @@ public class ManagePostsView
             return;
         }
 
-        // to be implemented
+        var updatePostView = new UpdatePostView(postRepository);
+        await updatePostView.ShowAsync(id);
     }
 
     private async Task DeletePostAsync()
@@ -126,7 +127,8 @@ public class ManagePostsView
             return;
         }
 
-        // to be implemented
+        var deletePostView = new DeletePostView(postRepository);
+        await deletePostView.ShowAsync(id);
     }
 
     private async Task ListPostsByUserAsync()
@@ -141,6 +143,7 @@ public class ManagePostsView
             return;
         }
 
-        // to be implemented
+        var listPostsByUserView = new ListPostsByUserView(postRepository);
+        listPostsByUserView.Show(userId);
     }
 }

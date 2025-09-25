@@ -99,7 +99,12 @@ public class ManageVotesView
             return;
         }
 
-        // to be implemented
+        Console.Write("Is this an upvote? (y/n): ");
+        var upvoteInput = Console.ReadLine()?.Trim().ToLower();
+        bool isUpvote = upvoteInput == "y";
+
+        var voteView = new VotePostView(postVoteRepository!);
+        await voteView.VoteAsync(userId, postId, isUpvote);
     }
 
     private async Task VoteOnCommentAsync()
@@ -121,7 +126,12 @@ public class ManageVotesView
             return;
         }
 
-        // to be implemented
+        Console.Write("Is this an upvote? (y/n): ");
+        var upvoteInput = Console.ReadLine()?.Trim().ToLower();
+        bool isUpvote = upvoteInput == "y";
+
+        var voteView = new VoteCommentView(commentVoteRepository!);
+        await voteView.VoteAsync(userId, commentId, isUpvote);
     }
 
     private async Task ViewPostVotesAsync()
@@ -129,7 +139,22 @@ public class ManageVotesView
         Console.Clear();
         Console.WriteLine("=== Post Votes ===");
 
-        // to be implemented
+        Console.Write("Post ID: ");
+        if (!int.TryParse(Console.ReadLine(), out int postId))
+        {
+            Console.WriteLine("Invalid Post ID format.");
+            return;
+        }
+
+        Console.Write("User ID: ");
+        if (!int.TryParse(Console.ReadLine(), out int userId))
+        {
+            Console.WriteLine("Invalid User ID format.");
+            return;
+        }
+
+        var view = new PostVotesView(postVoteRepository!);
+        await view.ShowAsync(userId, postId);
     }
 
     private async Task ViewCommentVotesAsync()
@@ -137,6 +162,21 @@ public class ManageVotesView
         Console.Clear();
         Console.WriteLine("=== Comment Votes ===");
 
-        // to be implemented
+        Console.Write("Comment ID: ");
+        if (!int.TryParse(Console.ReadLine(), out int commentId))
+        {
+            Console.WriteLine("Invalid Comment ID format.");
+            return;
+        }
+
+        Console.Write("User ID: ");
+        if (!int.TryParse(Console.ReadLine(), out int userId))
+        {
+            Console.WriteLine("Invalid User ID format.");
+            return;
+        }
+
+        var view = new CommentVotesView(commentVoteRepository!);
+        await view.ShowAsync(userId, commentId);
     }
 }

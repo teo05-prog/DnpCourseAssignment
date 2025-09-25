@@ -117,7 +117,8 @@ public class ManageCommentsView
             return;
         }
 
-        // to be implemented
+        var updateCommentView = new UpdateCommentView(commentRepository);
+        await updateCommentView.ShowAsync(id);
     }
 
     private async Task DeleteCommentAsync()
@@ -132,7 +133,8 @@ public class ManageCommentsView
             return;
         }
 
-        // to be implemented
+        var deleteCommentView = new DeleteCommentView(commentRepository);
+        await deleteCommentView.ShowAsync(id);
     }
 
     private async Task ListCommentsByUserAsync()
@@ -147,7 +149,9 @@ public class ManageCommentsView
             return;
         }
 
-        // to be implemented
+        var listCommentByUserView =
+            new ListCommentByUserView(commentRepository);
+        listCommentByUserView.Show(userId);
     }
 
     private async Task ListCommentsByPostAsync()
@@ -162,6 +166,8 @@ public class ManageCommentsView
             return;
         }
 
-        // to be implemented
+        var listCommentByPostView =
+            new ListCommentByPostView(commentRepository);
+        listCommentByPostView.Show(postId);
     }
 }

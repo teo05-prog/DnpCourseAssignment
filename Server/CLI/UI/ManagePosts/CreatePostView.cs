@@ -36,8 +36,7 @@ public class CreatePostView
             Console.WriteLine("Invalid User ID format.");
             return;
         }
-
-        // Validate user exists
+        
         try
         {
             await userRepository.GetSingleAsync(userId);
