@@ -21,7 +21,7 @@ public class SingleUserView
         {
             var user = await userRepository.GetSingleAsync(userId);
             Console.WriteLine($"ID: {user.Id}");
-            Console.WriteLine($"Username: {user.Username}");
+            Console.WriteLine($"Username: {user.UserName}");
         }
         catch (InvalidOperationException ex)
         {

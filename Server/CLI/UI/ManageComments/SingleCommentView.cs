@@ -24,7 +24,7 @@ public class SingleCommentView
             var post = await postRepository.GetSingleAsync(comment.PostId);
 
             Console.WriteLine($"Comment ID: {comment.Id}");
-            Console.WriteLine($"Author: {author.Username} (ID: {author.Id})");
+            Console.WriteLine($"Author: {author.UserName} (ID: {author.Id})");
             Console.WriteLine($"Post: {post.Title} (ID: {post.Id})");
             Console.WriteLine($"Body:\n{comment.Body}");
         }

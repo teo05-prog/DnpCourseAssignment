@@ -26,7 +26,7 @@ public class CreateUserView
         }
 
         var existingUsers = userRepository.GetManyAsync()
-            .Where(u => u.Username == username);
+            .Where(u => u.UserName == username);
         if (existingUsers.Any())
         {
             Console.WriteLine(
@@ -44,7 +44,7 @@ public class CreateUserView
 
         var user = new User
         {
-            Username = username,
+            UserName = username,
             Password = password
         };
 

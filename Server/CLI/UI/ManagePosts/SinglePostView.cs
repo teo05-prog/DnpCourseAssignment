@@ -23,7 +23,7 @@ public class SinglePostView
 
             Console.WriteLine($"Post ID: {post.Id}");
             Console.WriteLine($"Title: {post.Title}");
-            Console.WriteLine($"Author: {author.Username} (ID: {author.Id})");
+            Console.WriteLine($"Author: {author.UserName} (ID: {author.Id})");
             Console.WriteLine($"Body:\n{post.Body}");
             Console.WriteLine();
         }

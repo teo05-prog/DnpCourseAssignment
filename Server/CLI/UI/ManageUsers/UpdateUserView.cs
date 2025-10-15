@@ -20,7 +20,7 @@ public class UpdateUserView
             return;
         }
 
-        Console.WriteLine($"Current Username: {user.Username}");
+        Console.WriteLine($"Current Username: {user.UserName}");
         Console.Write("New Username: ");
         var newUsername = Console.ReadLine()?.Trim();
         if (string.IsNullOrEmpty(newUsername))
@@ -38,7 +38,7 @@ public class UpdateUserView
             return;
         }
 
-        user.Username = newUsername;
+        user.UserName = newUsername;
         user.Password = newPassword;
         await userRepository.UpdateAsync(user);
         Console.WriteLine("User updated successfully.");

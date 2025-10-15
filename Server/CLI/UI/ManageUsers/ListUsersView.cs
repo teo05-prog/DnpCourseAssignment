@@ -28,7 +28,7 @@ public class ListUsersView
         Console.WriteLine(new string('-', 30));
         foreach (var user in users)
         {
-            Console.WriteLine($"{user.Id,-5} {user.Username,-20}");
+            Console.WriteLine($"{user.Id,-5} {user.UserName,-20}");
         }
     }
 }

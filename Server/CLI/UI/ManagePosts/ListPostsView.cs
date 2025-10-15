@@ -32,7 +32,7 @@ public class ListPostsView
                 ? post.Title.Substring(0, 27) + "..."
                 : post.Title;
             Console.WriteLine(
-                $"{post.Id,-5} {titleDisplay,-30} {author.Username,-20}");
+                $"{post.Id,-5} {titleDisplay,-30} {author.UserName,-20}");
         }
     }
 }

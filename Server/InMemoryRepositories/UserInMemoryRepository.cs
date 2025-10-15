@@ -16,11 +16,11 @@ public class UserInMemoryRepository : IUserRepository
     {
         users.AddRange(new[]
         {
-            new User { Id = 1, Username = "admin", Password = "admin123" },
+            new User { Id = 1, UserName = "admin", Password = "admin123" },
             new User
-                { Id = 2, Username = "john_doe", Password = "password123" },
+                { Id = 2, UserName = "john_doe", Password = "password123" },
             new User
-                { Id = 3, Username = "jane_smith", Password = "mypassword" }
+                { Id = 3, UserName = "jane_smith", Password = "mypassword" }
         });
     }
 
